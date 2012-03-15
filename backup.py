@@ -10,7 +10,7 @@ __copyright__   = GNU GPLv3
 
 import os,time,sys
 from subprocess import Popen, PIPE
-global filePath 
+global filePath, cdtofilePath
 
 
 def pathforBackup():
@@ -28,6 +28,7 @@ def checkforGit():
         print '.git exist at destination'
     cdtofilePath = 'cd ' + filePath   
     os.system(cdtofilePath)
+    global cdtofilePath
     print cdtofilePath
 
 def gitUntracked():
@@ -35,6 +36,7 @@ def gitUntracked():
     untracked = Popen('git ls-files --exclude-standard --others',shell=True, stdout=PIPE).stdout.readlines()
     for untrackedfile in untracked:
         gitAdd(untrackedfile,commit_msg)
+    print cdtofilePath    
 
 def gitModified():
     commit_msg='modified'
