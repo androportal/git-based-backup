@@ -36,13 +36,14 @@ def gitUntracked():
     untracked = Popen('git ls-files --exclude-standard --others',shell=True, stdout=PIPE).stdout.readlines()
     for untrackedfile in untracked:
         gitAdd(untrackedfile,commit_msg)
-    print cdtofilePath    
+
 
 def gitModified():
     commit_msg='modified'
     modified = Popen('git ls-files --modified',shell=True, stdout=PIPE).stdout.readlines()
     for modifiedfile in modified:
         gitAdd(modifiedfile,commit_msg)
+    print cdtofilePath   
 
 def gitDelete():
     commit_msg='deleted'
