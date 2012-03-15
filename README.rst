@@ -19,7 +19,7 @@ Usage
 Just run the script by 
 :: 
  
-    python backup.py
+    python backup.py destination-filePath
 
 
 License
