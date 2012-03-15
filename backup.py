@@ -28,6 +28,7 @@ def checkforGit():
         print '.git exist at destination'
     cdtofilePath = 'cd ' + filePath   
     os.system(cdtofilePath)
+    print cdtofilePath
 
 def gitUntracked():
     commit_msg='added'
