@@ -14,7 +14,7 @@ global filePath
 
 
 def pathforBackup():
-    if len(sys.argv) == 2:                                  
+    if len(sys.argv) == 2:                    # accepts one CLA, i.e filename              
         global filePath
         filePath = sys.argv[1]
     else:    
@@ -26,10 +26,12 @@ def checkforGit():
         os.system('git init ' + filePath)
     else:
         print '.git exist at destination'
+    cdtofilePath = 'cd ' + filePath   
+    os.system(cdtofilePath)
 
 def gitUntracked():
     commit_msg='added'
-    untracked = Popen('git ls-files . --exclude-standard --others',shell=True, stdout=PIPE).stdout.readlines()
+    untracked = Popen('git ls-files --exclude-standard --others',shell=True, stdout=PIPE).stdout.readlines()
     for untrackedfile in untracked:
         gitAdd(untrackedfile,commit_msg)
 
