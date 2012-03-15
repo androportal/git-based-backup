@@ -26,10 +26,7 @@ def checkforGit():
         os.system('git init ' + filePath)
     else:
         print '.git exist at destination'
-    cdtofilePath = 'cd ' + filePath   
-    os.system(cdtofilePath)
-    global cdtofilePath
-    print cdtofilePath
+    os.chdir(filePath)                       # change directory to filePath
 
 def gitUntracked():
     commit_msg='added'
@@ -43,7 +40,6 @@ def gitModified():
     modified = Popen('git ls-files --modified',shell=True, stdout=PIPE).stdout.readlines()
     for modifiedfile in modified:
         gitAdd(modifiedfile,commit_msg)
-    print cdtofilePath   
 
 def gitDelete():
     commit_msg='deleted'
