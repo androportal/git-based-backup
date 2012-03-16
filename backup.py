@@ -64,9 +64,10 @@ def gitAdd(receivedFiles):
 # commit changes
 def gitCommit():
     myWeek = time.strftime("%a")
-    myDate = time.strftime("%d-%B-%Y")
+    myDate = time.strftime("%Y, %m, %d")
+    
     myTime = time.strftime("%H-%M-%S")
-    timeStamp='Commit on: ' + myWeek + ' ' + myDate + ' ' + myTime
+    timeStamp='Commit on: ' + myDate 
     gitcommit='git commit -m ' + "'" + timeStamp + ' ' + "'" 
     os.system(gitcommit)
 
