@@ -11,7 +11,8 @@ Packages required
 
  #. git 
 
- #. python
+ #. python, PyQt, pyuic4
+
 
 
 Usage
@@ -19,7 +20,11 @@ Usage
 Just run the script by 
 :: 
  
-    python backup.py destination-Directory-Path
+    python backup.py destination-Directory-Path  (to start backup process)
+
+:: 
+ 
+    python restore.py                            (a calender to select restore date) 
 
 
 License
