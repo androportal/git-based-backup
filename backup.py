@@ -10,89 +10,77 @@ __copyright__   = GNU GPLv3
 
 import os,time,sys
 from subprocess import Popen, PIPE
-global filePath, cdtofilePath
+
+global dirPath
+global timeInterval 
+timeInterval = 5                # define the time interval(in seconds)
 
 
+# Accepts only one Command line argument as directory-name              
 def pathforBackup():
-    if len(sys.argv) == 2:                    # accepts one CLA, i.e filename              
-        global filePath
-        filePath = sys.argv[1]
+    if len(sys.argv) == 2:                    
+        global dirPath
+        dirPath = sys.argv[1]
     else:    
-        sys.exit("Provide a file path for backup")
+        sys.exit("Provide a directory path for backup")
 
+# check for existance of .git directory, else create it 
 def checkforGit():
-    global filePath
-    if not os.path.exists(filePath + '/.git/'):
-        os.system('git init ' + filePath)
+    global dirPath
+    if not os.path.exists(dirPath + '/.git/'):
+        os.system('git init ' + dirPath)
     else:
         print '.git exist at destination'
-    os.chdir(filePath)                       # change directory to filePath
+    os.chdir(dirPath)                       # change directory to dirPath
 
+# function to handle newly untracked files
 def gitUntracked():
-    commit_msg='added'
+    # list all untracked files
     untracked = Popen('git ls-files --exclude-standard --others',shell=True, stdout=PIPE).stdout.readlines()
+    # go through every file and add
     for untrackedfile in untracked:
-        gitAdd(untrackedfile,commit_msg)
+        gitAdd(untrackedfile)
 
-
+# function to handle modification made to file(s)
 def gitModified():
     commit_msg='modified'
     modified = Popen('git ls-files --modified',shell=True, stdout=PIPE).stdout.readlines()
     for modifiedfile in modified:
-        gitAdd(modifiedfile,commit_msg)
+        gitAdd(modifiedfile)
 
+# function to handle deleted file(s)
 def gitDelete():
     commit_msg='deleted'
     deleted = Popen('git ls-files --deleted',shell=True, stdout=PIPE).stdout.readlines()
     for deletedfile in deleted:
         gitdelete='git rm ' + deletedfile
         os.system(gitdelete)
-        gitCommit(commit_msg)
 
-def gitAdd(receivedFiles,commitMsg):
-    print commitMsg
+# function to add changes    
+def gitAdd(receivedFiles):
     gitadd = 'git add ' + receivedFiles
     os.system(gitadd)
-    gitCommit(commitMsg)
-
-def gitCommit(msg):
-    #print "In function gitCommit " + msg
+    
+# commit changes
+def gitCommit():
     myWeek = time.strftime("%a")
     myDate = time.strftime("%d-%B-%Y")
     myTime = time.strftime("%H-%M-%S")
     timeStamp='Commit on: ' + myWeek + ' ' + myDate + ' ' + myTime
-    gitcommit='git commit -m ' + "'" + timeStamp + ' ' + '\nAction: ' + msg + "'" 
+    gitcommit='git commit -m ' + "'" + timeStamp + ' ' + "'" 
     os.system(gitcommit)
 
 if __name__=='__main__':
+    # call below functions only once
     pathforBackup()
     checkforGit()   
     while True:
+        # call functions
         gitUntracked()
         gitModified()
         gitDelete()
-	time.sleep(5)
+        gitCommit()
+	time.sleep(timeInterval)
 	
 	
 	
-########################################################################################
-""" Not in use 
-def gitstart():
-    # if not os.path.exists('.git'):
-    if not os.path.isdir('.git'):
-        print "No .git/ dir"
-        os.system('git init')       
-    else:
-        #print ".git/ dir exist"
-        gitUntracked()
-        gitModified()
-        gitDelete()
-        # gitCached()
-        
-def gitCached():
-    cached = Popen('git ls-files --cached',shell=True, stdout=PIPE).stdout.readlines()
-    for cachedfile in cached:
-        print cachedfile       
-        
-"""        
-        
