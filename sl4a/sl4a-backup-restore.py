@@ -5,24 +5,43 @@ import time
 import android
 droid = android.Android()
 
-def backupSync(srcDir,destDir):
-    
-    
+def FirstYesNoDialog():
     droid.dialogCreateAlert('Backup/Restore Tool',' Do you want to proceed')
     droid.dialogSetPositiveButtonText('Yes')
     droid.dialogSetNegativeButtonText('Not now')
     droid.dialogShow()
     yesNo = droid.dialogGetResponse().result
+    if yesNo['which'] == 'positive':
+        backupRestoreDialog()
+    else:
+        droid.makeToast("Good Bye !")
 
-    if yesNo["which"] == 'positive':
+def backupRestoreDialog():
+        droid.dialogCreateAlert('Select Option')
+        droid.dialogSetPositiveButtonText('OK')
+        droid.dialogSetNegativeButtonText('Cancel')
         choice = ['backup','restore']
         droid.dialogSetSingleChoiceItems(choice)
         droid.dialogShow()
-        backupRestore = droid.dialogGetResponse().result
-        print backupRestore
-    else:
-        droid.makeToast("Good Bye!")
+        OkCancel = droid.dialogGetResponse().result
+        if OkCancel['which'] == 'positive':
+            choice = droid.dialogGetSelectedItems().result
+            if choice == [0]:
+                backup()
+            elif choice == [1]:
+                restore()
+            droid.makeToast("Good Bye!")
 
+
+
+
+
+if __name__ == '__main__':
+    FirstYesNoDialog()
+
+
+
+"""
     # check for src dir
     if not os.path.exists(srcDir):
         droid.makeToast("Src dir not exist!")
@@ -39,3 +58,4 @@ def backupSync(srcDir,destDir):
 
 # call function
 backupSync('/sdcard/src/','/sdcard/dest')
+"""
