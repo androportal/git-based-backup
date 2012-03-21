@@ -9,7 +9,7 @@ from subprocess import Popen, PIPE
 # make an instant
 droid = android.Android()
 
-# simple yes/no dialog box
+
 def FirstYesNoDialog():
     droid.dialogCreateAlert('Backup/Restore Tool',' Do you want to proceed')
     droid.dialogSetPositiveButtonText('Yes')
@@ -21,7 +21,7 @@ def FirstYesNoDialog():
     else:
         droid.makeToast("Good Bye !")
 
-# do you want to backup OR restore ?
+
 def backupRestoreDialog():
         droid.dialogCreateAlert('Select Option')
         droid.dialogSetPositiveButtonText('OK')
@@ -32,15 +32,19 @@ def backupRestoreDialog():
         OkCancel = droid.dialogGetResponse().result
 
         # source and destination path
-        srcDir='/sdcard/src'
-        destDir='/sdcard/dest'
+        # for multiple paths, create a list
+        srcDirs=['/data/app','/data/app-private']
+        destDirs=['/sdcard/data/app', '/sdcard/data/app-private']
 
         if OkCancel['which'] == 'positive':
             choice = droid.dialogGetSelectedItems().result
             if choice == [0]:
-                backup(srcDir,destDir)
+                # pass a range to for loop as a tuple
+                for srcDir, destDir in (srcDirs, destDirs):
+                    backup(srcDir,destDir)
             elif choice == [1]:
-                restore(destDir,srcDir)
+                for srcDir, destDir in (srcDirs, destDirs):
+                    restore(destDir,srcDir)
             droid.makeToast("Good Bye!")
 
 
