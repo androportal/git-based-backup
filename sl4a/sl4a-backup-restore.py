@@ -87,6 +87,7 @@ def backup(srcDir,destDir):
             print destDir
             os.makedirs(destDir) # make directory
             print "Destination dir created: ", destDir
+            progress_bar(srcDir,destDir,src_file_count)
         else:
             progress_bar(srcDir,destDir,src_file_count)
 
