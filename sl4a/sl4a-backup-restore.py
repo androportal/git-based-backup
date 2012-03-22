@@ -34,17 +34,17 @@ def backupRestoreDialog():
         # source and destination path
         # for multiple paths, create a list
         srcDirs=['/data/app','/data/app-private']
-        destDirs=['/sdcard/data/app', '/sdcard/data/app-private']
+        destDirs=['/sdcard/data/app','/sdcard/data/app-private']
 
         if OkCancel['which'] == 'positive':
             choice = droid.dialogGetSelectedItems().result
             if choice == [0]:
                 # pass a range to for loop as a tuple
-                for srcDir, destDir in (srcDirs, destDirs):
-                    backup(srcDir,destDir)
+                for backupPath in range(0,len(srcDirs)):
+                    backup(srcDirs[backupPath],destDirs[backupPath])
             elif choice == [1]:
-                for srcDir, destDir in (srcDirs, destDirs):
-                    restore(destDir,srcDir)
+                for restorePath in range(0,len(srcDirs)):
+                    restore(destDirs[restorePath],srcDirs[restorePath])
             droid.makeToast("Good Bye!")
 
 
@@ -63,7 +63,7 @@ def progress_bar(srcDir,destDir,src_file_count):
     file_count = 0              # initial file count
     # go through the listOfFiles and copy each file at once
     for file_nm in listOfFiles:
-        time.sleep(1)
+        time.sleep(0.5)
         copy_command = 'cp -r ' + srcDir + '/' + file_nm.strip('\n') + ' ' + destDir
         os.system(copy_command)
         file_count += 1
@@ -72,7 +72,7 @@ def progress_bar(srcDir,destDir,src_file_count):
 
 
 def backup(srcDir,destDir):
-
+    print srcDir,destDir,
     # check for src dir
     if not os.path.exists(srcDir):
         droid.makeToast("Src dir not exist!")
@@ -84,7 +84,8 @@ def backup(srcDir,destDir):
 
         # check if the destination dir path exist, if not, create it.
         if not os.path.exists(destDir):
-            os.mkdir(destDir) # make directory
+            print destDir
+            os.makedirs(destDir) # make directory
             print "Destination dir created: ", destDir
         else:
             progress_bar(srcDir,destDir,src_file_count)
