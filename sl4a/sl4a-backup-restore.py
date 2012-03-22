@@ -9,7 +9,7 @@ from subprocess import Popen, PIPE
 # make an instant
 droid = android.Android()
 
-
+#==============================  1  ========================================
 def FirstYesNoDialog():
     droid.dialogCreateAlert('Backup/Restore Tool',' Do you want to proceed')
     droid.dialogSetPositiveButtonText('Yes')
@@ -21,6 +21,7 @@ def FirstYesNoDialog():
     else:
         droid.makeToast("Good Bye !")
 
+#==============================  2  =========================================
 
 def backupRestoreDialog():
         droid.dialogCreateAlert('Select Option')
@@ -33,8 +34,8 @@ def backupRestoreDialog():
 
         # source and destination path
         # for multiple paths, create a list
-        srcDirs=['/data/app','/data/app-private']
-        destDirs=['/sdcard/data/app','/sdcard/data/app-private']
+        srcDirs=['/data/app','/data/data']
+        destDirs=['/sdcard/data/app','/sdcard/data/data']
 
         if OkCancel['which'] == 'positive':
             choice = droid.dialogGetSelectedItems().result
@@ -47,6 +48,7 @@ def backupRestoreDialog():
                     restore(destDirs[restorePath],srcDirs[restorePath])
             droid.makeToast("Good Bye!")
 
+#=============================  3  =========================================
 
 def progress_bar(srcDir,destDir,src_file_count):
 
@@ -63,13 +65,15 @@ def progress_bar(srcDir,destDir,src_file_count):
     file_count = 0              # initial file count
     # go through the listOfFiles and copy each file at once
     for file_nm in listOfFiles:
-        time.sleep(0.5)
+        time.sleep(0.1)
         copy_command = 'cp -r ' + srcDir + '/' + file_nm.strip('\n') + ' ' + destDir
-        os.system(copy_command)
+        print copy_command
+#        os.system(copy_command)
         file_count += 1
         droid.dialogSetCurrentProgress(file_count)
     droid.dialogDismiss()
 
+#==============================  4  =========================================
 
 def backup(srcDir,destDir):
     print srcDir,destDir,
@@ -84,13 +88,13 @@ def backup(srcDir,destDir):
 
         # check if the destination dir path exist, if not, create it.
         if not os.path.exists(destDir):
-            print destDir
             os.makedirs(destDir) # make directory
             print "Destination dir created: ", destDir
             progress_bar(srcDir,destDir,src_file_count)
         else:
             progress_bar(srcDir,destDir,src_file_count)
 
+#=============================   5  =========================================
 
 def restore(srcDir,destDir):
     
@@ -106,7 +110,7 @@ def restore(srcDir,destDir):
         os.chdir(backupDir)
         file_count = Popen('ls | wc -l',shell=True, stdout=PIPE).stdout.readline()
         src_file_count = file_count.strip()
-        
+
         # check if the destination dir path
         if not os.path.exists(restoreDir):
             sys.exit("Restore Dir does not exist!")
@@ -114,6 +118,8 @@ def restore(srcDir,destDir):
             # call progress bar
             progress_bar(srcDir,destDir,src_file_count)
 
+#============================================================================
+#============================================================================
 
 if __name__ == '__main__':
     FirstYesNoDialog()
